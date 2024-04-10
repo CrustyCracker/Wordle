@@ -1,13 +1,6 @@
 # Programowanie Aplikacji Internetowych
 ## Dokumentacja projektu Wordle
 
-### Moje obowiązki (Mateusz Krakowski)
-Byłem odpowiedzialny za stworzenie bazy danych w PostgreSQL oraz zapakowanie jej do kontenera dokerowego.
-Uczestniczyłem w procesie połączenia bazy danych do Backendu.
-
-### Zespół 7 osobowy
-Mateusz Krakowski i inni
-
 ### Temat
 Wordle - gra polegająca na odgadnięciu pięcioliterowego słowa. Użytkownik ma do dyspozycji sześć prób, a po każdej próbie gra informuje go, czy użyte litery znajdują się w słowie-odpowiedzi i w jakim dokładnie miejscu, czy też znajdują się w słowie-odpowiedzi, ale w innym miejscu, albo też nie znajdują się w słowie-odpowiedzi w ogóle.
 
