@@ -1,21 +1,17 @@
-# Programowanie Aplikacji Internetowych
-## Dokumentacja projektu Wordle
+# Web Application Programming
+## Wordle Project Documentation
 
-### Moje obowiązki (Mateusz Krakowski)
-Byłem odpowiedzialny za stworzenie bazy danych w PostgreSQL oraz zapakowanie jej do kontenera dokerowego.
-Uczestniczyłem w procesie połączenia bazy danych do Backendu.
+### Topic
+Wordle - a game based on guessing a five-letter word. The user has six attempts, and after each attempt, the game informs them whether the used letters are in the word-answer and in what exact position, whether they are in the word-answer but in a different position, or if they are not in the word-answer at all.
 
-### Zespół 7 osobowy
-Mateusz Krakowski i inni
+### Implementation
 
-### Temat
-Wordle - gra polegająca na odgadnięciu pięcioliterowego słowa. Użytkownik ma do dyspozycji sześć prób, a po każdej próbie gra informuje go, czy użyte litery znajdują się w słowie-odpowiedzi i w jakim dokładnie miejscu, czy też znajdują się w słowie-odpowiedzi, ale w innym miejscu, albo też nie znajdują się w słowie-odpowiedzi w ogóle.
+#### Database
 
-### Implementacja
+#### Database
 
-#### Baza danych
+The PostgreSQL 15.2 database "wordledb" operates in a Docker environment on localhost, port 5432. On the database side, we did not use any programming, only serial types were used to automate assigning identifiers to rows. It is mainly used to store data collected for the application's needs. The entire structure is formulated in the file DATABASE/scripts/DATABASE_CREATE.sql.
 
-Baza danych PostgreSQL 15.2 wordledb działa na środowisku dockerowym na localhoscie, port 5432. Po stronie bazy nie skorzystaliśmy z programowania, jedynie użyliśmy typów serial, aby zautomatyzować nadawanie identyfikatorów dla rzędów. Służy ona głównie do przechowywania danych zbieranych na potrzebę aplikacji. Cała struktura jest sformułowana w pliku DATABASE/scripts/DATABASE_CREATE.sql.
 
 
 ```mermaid
@@ -78,11 +74,12 @@ erDiagram
 
 #### Back End
 
-Część backend-owa składa się z dwóch niezależnych serwisów: `SESSION` i `AUTHORIZATION`.
+The backend consists of two independent services: `SESSION` and `AUTHORIZATION`.
 
-SESSION odpowiada za zarządzanie rozgrywką. Zalogowani użytkownicy mogą zgłosić się w celu nawiązania sesji (rozgrywki). W ramach gry przesyłają kolejnymi zapytaniami słowa. Serwis weryfikuje czy słowo jest poprawne i zwraca rezultat.
+SESSION is responsible for managing the gameplay. Logged-in users can request to start a session (game). During the game, they submit words with subsequent requests. The service verifies if the word is correct and returns the result.
 
-AUTHORIZATION odpowiada za zarządzanie użytkownikami oraz zapewnienie bezpieczeństwa. To ten serwis umożliwia rejestrację oraz logowanie. W ramach projektu skorzystaliśmy z autoryzacji za pomocą JSON Web Token. Generalny zarys stosowanego przez nas modelu bezpieczeństwa:
+AUTHORIZATION is responsible for managing users and ensuring security. This service enables registration and login. In the project, we utilized JSON Web Token for authentication. The general outline of our security model:
+
 
 ```mermaid
 sequenceDiagram
@@ -108,65 +105,60 @@ sequenceDiagram
 
 ```
 
-**Budowanie projektu**
+**Building the Project**
 
-W ramach projektu skorzystaliśmy z narzędzia do automatycznego budowania - `gradle`. Projekt można uruchomić z lini poleceń wywołując:
+We utilized the `gradle` tool for automatic building within the project. The project can be run from the command line by executing:
 
+
+![](https://hackmd.io/_uploads/HJm42U1Pn.png)
+
+
+![](https://hackmd.io/_uploads/HyhR3rJvh.png)
 ```
 ./gradlew clean build bootRun
 ```
 
 **Swagger**
 
-Aby ułatwić testowanie serwisu dodaliśmy do projektów endpoint ze swaggerem. Pozwala on na łatwe wywoływanie endpointów bez korzystania z zewnętrznych narzędzi. Po uruchomieniu dockera swagger jest dostępny pod adresem odpowiednio http://localhost:7777/swagger oraz http://localhost:7788/swagger
-
-![](https://hackmd.io/_uploads/HJm42U1Pn.png)
-
-
-![](https://hackmd.io/_uploads/HyhR3rJvh.png)
+To facilitate testing of the service, we added a Swagger endpoint to the projects. It allows for easy invocation of endpoints without using external tools. After launching Docker, Swagger is accessible at the following addresses respectively: http://localhost:7777/swagger and http://localhost:7788/swagger
 
 #### Front End
 
 <!-- ![image alt](https://blog.axway.com/wp-content/uploads/2019/09/API-Gateway-capabilities-and-features-1.jpg "me" =408x400) -->
-
-Część frontendową aplikacji stanowią 3 pliki znajdujące się w podfolderze `public-html` folderu `FE`, tj. `index.html`, `style.css` oraz `app.js`.
+The frontend part of the application consists of 3 files located in the subfolder `public-html` of the `FE` folder, namely `index.html`, `style.css`, and `app.js`.
 
 HTML:
 
-- Plik HTML zawiera strukturę strony internetowej. Składa się z różnych elementów, takich jak nagłówek, sekcje itp.,
-- W sekcji nagłówka umieszczony jest tytuł aplikacji "Wordle",
-- W sekcji głównej znajduje się obszar, w którym będzie wyświetlany obecny stan gry, tj. próby zgadnięć i ich rezultaty oraz pomocnicza klawiatura, obrazująca wykorzystane litery,
-- W prawym górnym rogu aplikacji widnieją trzy przyciski: zmiany motywu (domyślny: `ciemny` oraz `jasny`), logowania oraz rejestracji; dwa ostatnie po kliknięciu powodują wyświetlenie okienka typu pop-up (za pomocą przekierowania na odpowiedni adres URL).
+- The HTML file contains the structure of the web page. It consists of various elements such as headers, sections, etc.
+- The application title "Wordle" is placed in the header section.
+- The main section contains an area where the current state of the game will be displayed, i.e., guessing attempts and their results, as well as an auxiliary keyboard illustrating used letters.
+- In the top right corner of the application, there are three buttons: for changing the theme (default: `dark` and `light`), logging in, and registering. Clicking the last two buttons displays a pop-up window (via redirection to the appropriate URL).
 
 CSS:
 
-- Arkusz stylów CSS jest używany do określania wyglądu i układu elementów HTML,
-- Dla różnych elementów zastosowano różne style, takie jak kolory, czcionki, marginesy, wyrównanie, tło itp., aby nadać aplikacji atrakcyjny wygląd,
-- Została użyta zewnętrzna biblioteka CSS - Material Icons, aby mieć dostęp do gotowych ikonek.
+- The CSS stylesheet is used to define the appearance and layout of HTML elements.
+- Different styles such as colors, fonts, margins, alignment, background, etc., are applied to various elements to give the application an attractive look.
+- An external CSS library - Material Icons, is used to access ready-made icons.
 
 JavaScript:
 
-- Skrypt JavaScript jest używany do dodawania interaktywności do aplikacji,
-- Zdefiniowano funkcje obsługujące różne zdarzenia, takie jak np. kliknięcie przycisku "Enter",
-- Oprócz wpisywania zgadywanego słowa za pomocą wyżej wspomnianej klawiatury wyświetlanej na ekranie (co jest kluczowym mechanizmem jeśli chodzi o np. korzystanie z aplikacji na urządzeniu mobilnym) dla wygody użytkownika istnieje również opcja wpisywania kolejnych liter za pomocą fizycznej klawiatury komputera,
-- Do kontaktu z Back Endem wykorzystywane są asynchroniczne zawołania typu "fetch"; sama "rozmowa" polega na przesyłaniu odpowiednich HTTP Requestów.
+- JavaScript script is used to add interactivity to the application.
+- Functions handling various events are defined, such as clicking the "Enter" button.
+- In addition to entering the guessed word using the aforementioned on-screen keyboard (which is a key mechanism for e.g., using the application on a mobile device), for user convenience, there is also an option to enter subsequent letters using the physical computer keyboard.
+- Asynchronous fetch calls are used to communicate with the Backend; the "conversation" involves sending appropriate HTTP requests.
 
-### Uruchomienie
-1. Postawić obrazy, na których zbudowana jest aplikacja, za pomocą komendy `docker compose up --build`,
-2. Poczekać, aż wszystkie kontenery zakończą proces wstawania (zazwyczaj można to rozpoznać po tym, że w kontenerze `session` widnieje `Application availability state ReadinessState changed to ACCEPTING_TRAFFIC` w logach,
-3. W przeglądarce można wejść na adres `localhost` i cieszyć się grą (ważne, żeby był to **localhost**, a **nie 127.0.0.1** z powodu CORS (Cross-Origin Resource Sharing), ponieważ tylko adres http://localhost/ zostanie zaakceptowany przez Back End.
+### Launch
+1. Deploy the images on which the application is built using the command `docker compose up --build`.
+2. Wait until all containers finish the startup process (typically identifiable by `Application availability state ReadinessState changed to ACCEPTING_TRAFFIC` in the `session` container logs).
+3. In the browser, navigate to `localhost` and enjoy the game (important to use **localhost**, not 127.0.0.1, due to CORS (Cross-Origin Resource Sharing), as only the address http://localhost/ will be accepted by the Backend.
 
-### Przykłady
+### Examples
 
-<!-- ![image alt](https://i0.wp.com/gamingretro.co.uk/wp-content/uploads/2022/03/windle.png?resize=752%2C440&ssl=1 "wordle" =564x300) -->
-
-- Ekran gry (tryb ciemny):
-![image alt](https://hackmd.io/_uploads/SJC_9C1Dh.png "Ekran gry (tryb ciemny)")
-- Ekran gry (tryb jasny):
-![image alt](https://hackmd.io/_uploads/BJMYq01vh.png "Ekran gry (tryb jasny)")
-- Okno rejestracji:
-![image alt](https://hackmd.io/_uploads/Hy8_oCkvn.png "Okno rejestracji")
-- Okno logowania:
-![image alt](https://hackmd.io/_uploads/HkF_oR1v3.png "Okno logowania")
-
-<!-- ![](https://hackmd.io/_uploads/SJ8owLJP3.png) -->
+- Game screen (dark mode):
+![Game Screen (Dark Mode)](https://hackmd.io/_uploads/SJC_9C1Dh.png)
+- Game screen (light mode):
+![Game Screen (Light Mode)](https://hackmd.io/_uploads/BJMYq01vh.png)
+- Registration window:
+![Registration Window](https://hackmd.io/_uploads/Hy8_oCkvn.png)
+- Login window:
+![Login Window](https://hackmd.io/_uploads/HkF_oR1v3.png)
